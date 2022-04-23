@@ -1,60 +1,105 @@
-import './App.css';
-import Header from './Components/Header';
-import Products from './Components/Products';
-import { BrowserRouter, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Cart from './Components/Cart';
 import { useState } from 'react';
-import data from './Data';
-
+import './App.css';
+import Remote from './Components/Remote';
+import Video from './Components/Video';
 
 function App() {
-  const { productItems } = data;
-  const[cartitems,setcartitems]=useState([]);
-  const handleproduct = (product) =>{
-    const exists = cartitems.find((item) => item.id === product.id);
-    if (exists) {
-      setcartitems(
-        cartitems.map((item) =>  item.id === product.id ? 
-        {...exists, quantity: exists.quantity + 1 } : item)
-      );
-    }
-    else{
-      setcartitems([...cartitems, {...product, quantity: 1}]);
-    }
+  const[off,setoff]=useState(false);
+  const[count,setcount]=useState(90);
+  const[volumes,setvolume]=useState(0.500);
+  const[videos,setvideos]=useState([
+    {
+    id:0,
+    url:'https://youtu.be/Kb8CW3axqRE'
+  },
+  {
+    id:1,
+    url:'https://youtu.be/SMKPKGW083c'
+  },
+  {
+    id:2,
+    url:'https://youtu.be/Zv11L-ZfrSg'
+  },
+  {
+    id:3,
+    url:'https://youtu.be/LXb3EKWsInQ'
+  }, {
+    id:4,
+    url:'https://youtu.be/linlz7-Pnvw'
+  },
+  {
+    id:5,
+    url:'https://youtu.be/lCa4soKWu-A'
+  },
+  {
+    id:6,
+    url:'https://youtu.be/c2NmyoXBXmE'
+  },{
+    id:7,
+    url:'https://youtu.be/glENND73k4Q'
+  },{
+    id:8,
+    url:'https://youtu.be/LiiYMEWKVnY'
+  },{
+    id:9,
+    url:'https://youtu.be/nFdBNJsW46Y'
+  },
+  {
+    id:10,
+    url:'https://youtu.be/ejgpomz8eUs'
+  },
+  {
+    id:11,
+    url:'https://youtu.be/XH6ER3cNrCY'
   }
-
-  const handleremoveproduct = (product) => {
-    const exists = cartitems.find((item) => item.id === product.id);
-    if (exists.quantity === 1) {
-      setcartitems(cartitems.filter((item) => item.id !== product.id));
-    }
-    else{
-      setcartitems(
-        cartitems.map((item)=> item.id === product.id ? {...exists,quantity: exists.quantity - 1}: item)
-      )
-    }
+]);
+const[index,setindex]=useState(0);
+function haddleup() {
+  setindex(index+1)
+}
+  function hadnledown() {
+    setindex(index-1)
   }
-
-  const handleclearcart=()=>{
-    setcartitems([]);
-  } 
-
+  function handleswitch() {
+    setoff(!off);
+  }
+  function handlesleep() {
+    alert("The channel will off in 10 seconds");
+    setTimeout(()=>{
+      setoff(false);
+    },10000)
+  }
+  function handlebright() {
+    setcount(count+20)
+  }
+  function handledecrease() {
+    setcount(count-20)
+  }
+  function handlevolume() {
+    setvolume(volumes+0.100);
+  }
+  function handlevolumedecrease() {
+    setvolume(volumes-0.100);
+  }
   return (
     <div className="App">
-      <BrowserRouter>
-      <Router>
-        <Switch>
-          <Route path="/" exact={true}>
-          <Header cartitems={ cartitems }></Header>
-           <div>
-            <Products handleproduct={ handleproduct } productItems={ productItems }></Products>
-           </div>
-          </Route>
-          <Route path="/cart"> <Cart handleclearcart={ handleclearcart } handleremoveproduct={ handleremoveproduct } handleproduct={ handleproduct } cartitems={ cartitems }></Cart> </Route>
-        </Switch>
-      </Router>
-      </BrowserRouter>
-      
+      <div className="row">
+      <div style={{filter:`brightness(${count}%)`}} className="col-md-8 col-sm-6">
+        { off && <Video videos={videos[index].url} volumes={volumes}></Video> }
+        {!off && <div><img className="picture" src="https://www.pinclipart.com/picdir/big/94-948489_tv-border-frame-transparent-clipart.png" alt="" srcset="" /></div> }
+        { !off && <div className="text-center"><h2 style={{color:"black",position:"absolute",left:"430px",top:"220px"}}>Switched off</h2></div> }
+      </div>  
+      <div className="col-md-4 col-sm-6">
+      <Remote handleswitch={handleswitch} 
+      handlesleep={ handlesleep } 
+      handlebright={handlebright} 
+      handledecrease={handledecrease} 
+      handlevolume={handlevolume}
+      handlevolumedecrease={handlevolumedecrease}
+      haddleup={haddleup}
+      hadnledown={hadnledown}></Remote>
+      </div>
+      </div>
     </div>
   );
 }

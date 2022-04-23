@@ -1,0 +1,12 @@
+.picture{
+    position: relative;
+    margin-top: 30px;
+    height: 500px;
+    width: 700px;
+}
+.video-player{
+    height: 210px;
+    position: absolute;
+    top: 50px;
+    left: 200px;
+}
